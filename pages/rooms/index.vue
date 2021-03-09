@@ -19,15 +19,15 @@
             <div class="card-body card-body-room">
               <h5 class="card-title">{{ loc.name }}</h5>
               <p class="f12 text-secondary">{{ loc.address }}</p>
-              <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ loc.originalPrice }}</p>
-              <p class="display-7 text-danger"><strong>Rp. {{ loc.sellingPrice }}</strong></p>
+              <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ addCommas(loc.originalPrice) }}</p>
+              <p class="display-7 text-danger"><strong>Rp. {{ addCommas(loc.sellingPrice) }}</strong></p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container pb-5" v-if="is_mobile">
+    <div class="container pb-5 mt-4" v-if="is_mobile">
       <div class="row mx-0 px-0">
         <div v-for="(loc,index) in data_rooms.data" class="col-6 mb-3" >
           <div class="card card-m ">
@@ -45,8 +45,8 @@
             <div class="card-body card-body-room">
               <h5 class="card-title">{{ loc.name }}</h5>
               <p class="f12 text-secondary">{{ loc.address }}</p>
-              <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ loc.originalPrice }}</p>
-              <p class="display-7 text-danger"><strong>Rp. {{ loc.sellingPrice }}</strong></p>
+              <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ addCommas(loc.originalPrice) }}</p>
+              <p class="display-7 text-danger"><strong>Rp. {{ addCommas(loc.sellingPrice) }}</strong></p>
             </div>
           </div>
         </div>
@@ -57,6 +57,7 @@
 <script>
 import axios from 'axios'
 import global from '~/components/global.js'
+import { addCommas } from '~/components/tools.js'
 
 export default {
   async asyncData({ query, app }) {
@@ -95,6 +96,9 @@ export default {
       ],
     }
   },
+  methods:{
+    addCommas
+  }
 }
 </script>
 <style scoped>

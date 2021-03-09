@@ -1,7 +1,9 @@
 <template>
 <section class="m-header header-top-fix shadow-sm">
   <div class="row mx-0 py-2">
-    <img src="/img/logo_white.png" />
+    <a href="/">
+      <img src="/img/logo_white.png" />
+    </a>
   </div>
 </section>
 </template>
@@ -16,6 +18,6 @@
 }
 
 .m-header img{
-  width: 50px;
+  width: 35px;
 }
 </style>

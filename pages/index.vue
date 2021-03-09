@@ -14,18 +14,24 @@
           </div>
         </div>
 
-        <div class="container search-container shadow">
-          <div class="row">
-            <div class="col-md-12 col-sm-12">
-              <h3>Welcome</h3>
-              <h3 class="mb-3"><strong>Find your affordable room, promotion and so much more...</strong></h3>
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Search Location</label>
-                <div class="input-group flex-nowrap">
-                  <span class="input-group-text" id="addon-wrapping"><i class="bi-search"></i></span>
-                  <input type="text" class="form-control" placeholder="Nama lokasi" aria-label="Username" aria-describedby="addon-wrapping" style="width:70%; margin-right:31px;" :value='search_keyword' @input='evt=>search_keyword=evt.target.value' @keyup="autocomplete()">
-                  <div class="d-grid gap-2  ml-2" style="width: 14%;">
-                    <button class="btn btn-outline-danger" type="button" :disabled="search_keyword.length > 3? false:true" @click="search">Cari</button>
+        <div class="container search-container ">
+          <div class="search-wrapper shadow">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <h3>Welcome</h3>
+                <h3 class="mb-3"><strong>Find your affordable room, promotion and so much more...</strong></h3>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Search Location</label>
+                  <div class="input-group flex-nowrap search-box">
+                    <span class="input-group-text" id="addon-wrapping"><i class="bi-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Nama lokasi" aria-label="Username" aria-describedby="addon-wrapping" style="width:70%; margin-right:31px;" :value='search_keyword' @input='evt=>search_keyword=evt.target.value' @keyup="autocomplete()">
+
+                    <div v-if="search_auto" class="search-autocomplete">
+                      <div class="search-item" v-if="search_data.length" v-for="src in search_data" @click="addSearch(src.unit.name+' - '+src.district.name)">{{ src.unit.name }} - {{ src.district.name }}, {{ src.city.name }}, {{ src.province.name }}</div>
+                    </div>
+                    <div class="d-grid gap-2  ml-2" style="width: 14%;">
+                      <button class="btn btn-outline-danger" type="button" :disabled="search_keyword.length > 3? false:true" @click="search">Cari</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -69,8 +75,8 @@
               <div class="card-body card-body-room">
                 <h5 class="card-title">{{ loc.name }}</h5>
                 <p class="f12 text-secondary">{{ loc.address }}</p>
-                <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ loc.originalPrice }}</p>
-                <p class="display-7 text-danger"><strong>Rp. {{ loc.sellingPrice }}</strong></p>
+                <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ addCommas(loc.originalPrice) }}</p>
+                <p class="display-7 text-danger"><strong>Rp. {{ addCommas(loc.sellingPrice) }}</strong></p>
               </div>
             </div>
           </VueSlickCarousel>
@@ -142,8 +148,8 @@
               <div class="card-body card-body-room">
                 <h5 class="card-title">{{ loc.name }}</h5>
                 <p class="f12 text-secondary">{{ loc.address }}</p>
-                <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ loc.originalPrice }}</p>
-                <p class="display-7 text-danger"><strong>Rp. {{ loc.sellingPrice }}</strong></p>
+                <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ addCommas(loc.originalPrice) }}</p>
+                <p class="display-7 text-danger"><strong>Rp. {{ addCommas(loc.sellingPrice) }}</strong></p>
               </div>
             </div>
           </div>
@@ -155,9 +161,10 @@
 <script>
 import VueSlickCarousel from 'vue-slick-carousel'
 import '~/node_modules/vue-slick-carousel/dist/vue-slick-carousel.css'
-import '~/node_modules/vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+// import '~/node_modules/vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 import axios from 'axios'
 import global from '~/components/global.js'
+import { addCommas } from '~/components/tools.js'
 
 export default {
   async asyncData({ app, redirect }) {
@@ -195,6 +202,7 @@ export default {
   data(){
     return{
       search_keyword:'',
+      search_auto:false,
       search_data:''
     }
   },
@@ -204,11 +212,13 @@ export default {
     },
   },
   methods: {
+    addCommas,
     search:function() {
       location.href="/rooms/?keyword="+this.search_keyword
     },
     autocomplete:function(){
       var vm = this;
+      vm.search_data = '';
 
       try{
         axios({
@@ -220,8 +230,8 @@ export default {
           },
         })
         .then((response)=> {
-          vm.search_data = response.data
-          console.log(vm.search_data)
+          vm.search_auto = true;
+          vm.search_data = response.data.data
         })
         .catch((error) => {
           vm.error = true;
@@ -235,6 +245,11 @@ export default {
       }catch(err){
         alert(err);
       }
+    },
+    addSearch: function(str) {
+      this.search_auto = false;
+      this.search_keyword = str;
+      this.search_data = '';
     }
   },
   mounted(){
@@ -242,7 +257,7 @@ export default {
   }
 }
 </script>
-
+<style scoped src="~/node_modules/vue-slick-carousel/dist/vue-slick-carousel-theme.css"></style>
 <style>
 .section-community{
   background: url('https://miro.medium.com/max/626/1*rxe5PC9XPGmID8Xw9mQ9ZQ.jpeg') no-repeat center center, rgba(0,0,0,.4);
@@ -265,16 +280,7 @@ export default {
 }
 
 .title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+
   display: block;
   font-weight: 300;
   font-size: 100px;
@@ -305,11 +311,45 @@ export default {
 .search-container{
   position: absolute;
   bottom: -130px;
-  left: 15%;
+  left: 0;
+  width: 100%;
+  max-width: unset !important;
+}
+
+.search-container .search-wrapper{
+  position: relative;
   padding:20px 30px 10px;
   background: white;
   margin:0 auto;
   border-radius: 6px;
+  max-width: 1340px;
+}
+
+.search-box{
+  position: relative;
+}
+
+.search-autocomplete{
+  position: absolute;
+  bottom: 0;
+  background: rgb(255, 255, 255);
+  border: 1px solid whitesmoke;
+  border-radius: 0 0 4px 4px;
+  width: 83.4%;
+  left: 0;
+  top: 37px;
+  z-index: 8;
+  height: fit-content;
+}
+
+.search-autocomplete .search-item{
+  padding:10px 5px;
+}
+
+.search-autocomplete .search-item:hover{
+  cursor: pointer;
+  background: tomato;
+  color: white;
 }
 
 .card-img {
@@ -357,7 +397,7 @@ export default {
 
 @media only screen and (max-width: 1700px) {
   .search-container{
-    left: 12%;
+    /* left: 6.5rem; */
   }
 }
 
