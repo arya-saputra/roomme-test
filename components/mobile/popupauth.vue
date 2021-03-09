@@ -1,13 +1,24 @@
 <template>
   <div>
-    <div class="row" v-if="mode=='login'">
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" v-model="u_email">
+    <div class="mb-4 display-3" @click="backNow">
+      <i class="bi bi-arrow-left-short"></i>
+    </div>
+    <div class="row mx-0 px-0" v-if="mode=='login'">
+      <div class=" mb-5">
+        <div class="display-2 mb-2"><strong>Sign In</strong></div>
+        <div class="f12 text-muted">Are you new user? <span class="text-danger" @click="mode='signup'">Click here</span></div>
       </div>
       <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="exampleFormControlInput1" placeholder="" v-model="u_password">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control form-control-lg" placeholder="Email" :value='u_email' @input='evt=>u_email=evt.target.value' aria-label="Email" aria-describedby="basic-addon2">
+          <span class="input-group-text" id="basic-addon2"><i class="bi bi-envelope"></i></span>
+        </div>
+      </div>
+      <div class="mb-3">
+         <div class="input-group mb-3">
+          <input :type="psw_view?'text':'password'" class="form-control form-control-lg" placeholder="Password" :value='u_password' @input='evt=>u_password=evt.target.value' aria-label="Password" aria-describedby="basic-addon2">
+          <span class="input-group-text f10" id="basic-addon2" @click="psw_view=!psw_view">{{ !psw_view? 'Show':'Hide'}}</span>
+        </div>
       </div>
       <div class="col-xs-12">
         <div class="alert alert-danger" role="alert" v-if="error">
@@ -15,40 +26,50 @@
         </div>
       </div>
       <div class="d-grid gap-2">
-        <button type="button" class="btn btn-md btn-outline-danger" @click="signInEmail()" :disabled="!u_password.length || !u_email.length? true:false">Sign In</button>
+        <button type="button" class="btn btn-lg btn-outline-danger" @click="signInEmail()" :disabled="!u_password.length || !u_email.length? true:false">Sign In</button>
       </div>
       <div class="mb-3 mt-2 divider">or</div>
       <div class="d-grid gap-2">
-        <button type="button" class="btn btn-md btn-light" id="google_login"><i class="bi bi-google"></i> Sign In with Google</button>
+        <button type="button" class="btn btn-lg btn-light" id="google_login"><i class="bi bi-google"></i> Sign In with Google</button>
       </div>
       <div class="mt-2 d-grid gap-2">
-        <button type="button" class="btn btn-md btn-light" @click="connectfb()"><i class="bi bi-facebook"></i> Sign In with Facebook</button>
-      </div>
-      <div class="mt-3 mb-3">
-        <div class="f12 text-muted">Are you new user? <span class="text-danger" @click="mode='signup'">Click here</span></div>
+        <button type="button" class="btn btn-lg btn-light" @click="connectfb()"><i class="bi bi-facebook"></i> Sign In with Facebook</button>
       </div>
     </div>
-    <div class="row" v-if="mode=='signup'">
-      <div class="mb-3">
-        <label for="inputFullname" class="form-label">Fullname</label>
-        <input type="text" class="form-control" id="inputFullname" placeholder="Name" v-model="u_name">
+    <div class="row mx-0 px-0" v-if="mode=='signup'">
+      <div class="mb-5">
+        <div class="display-2 mb-2"><strong>Sign Up</strong></div>
+        <div class="f12 text-muted">Already have account? <span class="text-danger" @click="mode='login'">Click here</span></div>
       </div>
       <div class="mb-3">
-        <label for="inputEmail" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com" v-model="u_email">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control form-control-lg" placeholder="Full Name" :value='u_name' @input='evt=>u_name=evt.target.value' aria-label="Fullname" aria-describedby="basic-addon2">
+          <span class="input-group-text" id="basic-addon2"><i class="bi bi-person"></i></span>
+        </div>
       </div>
       <div class="mb-3">
-        <label for="inputNumber" class="form-label">Mobile Number</label>
-        <input type="number" class="form-control" id="inputNumber" placeholder="08123456789" v-model="u_phone">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control form-control-lg" placeholder="Email" :value='u_email' @input='evt=>u_email=evt.target.value' aria-label="Email" aria-describedby="basic-addon2">
+          <span class="input-group-text" id="basic-addon2"><i class="bi bi-envelope"></i></span>
+        </div>
       </div>
       <div class="mb-3">
-        <label for="inputPassword" class="form-label">Password</label>
-        <input type="password" class="form-control" id="inputPassword" placeholder="" v-model="u_password">
-        <small class="f12">Password must contain at least 6 characters</small>
+        <div class="input-group mb-3">
+          <input type="number" class="form-control form-control-lg" placeholder="Phone Number" :value='u_phone' @input='evt=>u_phone=evt.target.value' aria-label="Phone" aria-describedby="basic-addon2">
+          <span class="input-group-text" id="basic-addon2"><i class="bi bi-phone"></i></span>
+        </div>
       </div>
       <div class="mb-3">
-        <label for="inputRepassword" class="form-label">Confirm Password</label>
-        <input type="password" class="form-control" id="inputRepassword" placeholder="" v-model="u_repassword">
+        <div class="input-group mb-3">
+          <input :type="psw_view?'text':'password'" class="form-control form-control-lg" placeholder="Password" :value='u_password' @input='evt=>u_password=evt.target.value' aria-label="Password" aria-describedby="basic-addon2">
+          <span class="input-group-text f10" id="basic-addon2" @click="psw_view=!psw_view">{{ !psw_view? 'Show':'Hide'}}</span>
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="input-group mb-3">
+          <input :type="rpsw_view?'text':'password'" class="form-control form-control-lg" placeholder="Confirm Password" :value='u_repassword' @input='evt=>u_repassword=evt.target.value' aria-label="Confirm Password" aria-describedby="basic-addon2">
+          <span class="input-group-text f10" id="basic-addon2" @click="rpsw_view=!rpsw_view">{{ !rpsw_view? 'Show':'Hide'}}</span>
+        </div>
       </div>
       <div class="col-xs-12">
         <div class="alert alert-danger" role="alert" v-if="error">
@@ -56,10 +77,7 @@
         </div>
       </div>
       <div class="d-grid gap-2">
-        <button type="button" class="btn btn-md btn-outline-danger" :disabled="validate.email && validate.name && validate.phone && validate.password && validate.repassword? false:true" @click="signUp()">Sign Up</button>
-      </div>
-      <div class="mt-3 mb-3">
-        <div class="f12 text-muted">Already have account? <span class="text-danger" @click="mode='login'">Click here</span></div>
+        <button type="button" class="btn btn-lg btn-outline-danger" :disabled="validate.email && validate.name && validate.phone && validate.password && validate.repassword? false:true" @click="signUp()">Sign Up</button>
       </div>
     </div>
     <div class="row text-center" v-if="mode=='success'">
@@ -93,6 +111,8 @@ export default {
       gl_id:'',
       gl_name:'',
       gl_gender:'',
+      psw_view:false,
+      rpw_view:false,
       validate:{
         email:false,
         phone:false,
@@ -170,8 +190,8 @@ export default {
     ...mapMutations({
       onLoading: 'onLoading'
     }),
-    closeThis:function(){
-      this.$emit('close');
+    backNow:function(){
+      window.history.back();
     },
     connectfb:function(){
 		  var vm = this;
@@ -260,11 +280,10 @@ export default {
           data : option
         })
         .then((response)=> {
-          vm.closeThis();
           vm.$store.commit('onLoaded');
           vm.$store.commit('pushToken', response.data.data.token)
           localStorage.rm_token = response.data.data.token;
-
+          location.href='/';
         })
         .catch((error) => {
           vm.error = true;
@@ -297,11 +316,10 @@ export default {
           }
         })
         .then((response)=> {
-          vm.closeThis();
           vm.$store.commit('onLoaded');
           vm.$store.commit('pushToken', response.data.data.token)
           localStorage.rm_token = response.data.data.token;
-
+          location.href="/";
         })
         .catch((error) => {
           vm.error = true;
@@ -356,6 +374,22 @@ export default {
   mounted(){
     this.startGoogle();
     openFB.init({appId: '269239061332221'});
+
+    if(localStorage.rm_token) {
+      location.href = '/'
+    }
   }
 }
 </script>
+<style scoped>
+.input-group-text{
+  background: white;
+
+  border-width: 1px;
+  color: rgb(199, 199, 199);
+}
+
+.input-group input[type='text'], .input-group input[type='password'],  .input-group input[type='number']{
+  border-right: none;
+}
+</style>

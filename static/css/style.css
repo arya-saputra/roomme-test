@@ -27,3 +27,104 @@
 .f12{
   font-size: 12px;
 }
+
+.f16{
+  font-size: 16px;
+}
+
+
+/* MOBILE */
+@media only screen and (max-width: 768px) {
+  .card-img {
+    height: 20vh;
+  }
+
+  .card-body-room {
+    height: 60px;
+  }
+
+  .card-title{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  .slick-location{
+    width: 100%;
+  }
+
+  .slick-location .slick-list{
+    padding:0px 5px 10px;
+  }
+
+  .slick-location .slick-dots{
+    text-align: left;
+    right: 0;
+    padding-left: 10px;
+    bottom: -15px;
+  }
+
+  .slick-location .slick-dots li button{
+    background-color: rgb(205, 51, 34);
+  }
+
+  .card-m{
+    width: 100% !important;
+    border:none;
+  }
+
+  .card-badge {
+    width: 50px;
+    height: 30px;
+    position: relative;
+    background: rgb(250, 200, 0);
+    color: black;
+    padding:4px 10px;
+    font-size: 14px;
+  }
+  .card-badge:before {
+    content: "";
+    position: absolute;
+    right: -15px;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 15px solid rgb(250, 200, 0);
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+  }
+  .card-discount {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }
+
+  .card-m .card-title{
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+  .card-rating{
+    background: white;
+    position: absolute;
+    bottom: 0;
+    padding:3px 10px;
+    font-size: 12px;
+    border-radius: 0 4px 0 0;
+  }
+
+  .card-rating .bi{
+    color: rgb(250, 200, 0);
+  }
+
+  .card-m .card-body-room{
+    height: auto;
+    padding:15px 0 0;
+  }
+
+  .card-m .bard-body{
+    border:none
+  }
+
+}

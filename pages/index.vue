@@ -1,93 +1,153 @@
 <template>
   <section>
-    <div  class="fullwidth-container mb-5">
-      <div class="row m-0">
-        <div class="col-md-12 col-sm-12 p-0">
-          <VueSlickCarousel :arrows="true" :dots="true" :autoplay="true" :autoplaySpeed="5000">
-            <div v-for="(banner,index) in data_home.data.banners">
-              <a :href="banner.linkUrl">
-                <img :src="banner.image.url" :alt="banner.image.alt" width="100%" />
-              </a>
+    <section v-if="!is_mobile">
+      <div  class="fullwidth-container mb-5">
+        <div class="row m-0">
+          <div class="col-md-12 col-sm-12 p-0">
+            <VueSlickCarousel :arrows="true" :dots="true" :autoplay="true" :autoplaySpeed="5000">
+              <div v-for="(banner,index) in data_home.data.banners">
+                <a :href="banner.linkUrl">
+                  <img :src="banner.image.url" :alt="banner.image.alt" width="100%" />
+                </a>
+              </div>
+            </VueSlickCarousel>
+          </div>
+        </div>
+
+        <div class="container search-container shadow">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <h3>Welcome</h3>
+              <h3 class="mb-3"><strong>Find your affordable room, promotion and so much more...</strong></h3>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Search Location</label>
+                <div class="input-group flex-nowrap">
+                  <span class="input-group-text" id="addon-wrapping"><i class="bi-search"></i></span>
+                  <input type="text" class="form-control" placeholder="Nama lokasi" aria-label="Username" aria-describedby="addon-wrapping" style="width:70%; margin-right:31px;" :value='search_keyword' @input='evt=>search_keyword=evt.target.value' @keyup="autocomplete()">
+                  <div class="d-grid gap-2  ml-2" style="width: 14%;">
+                    <button class="btn btn-outline-danger" type="button" :disabled="search_keyword.length > 3? false:true" @click="search">Cari</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container px-0" style="margin-top:10%;">
+        <a href="/rooms/" class="text-dark" style="text-decoration:none;">
+          <h4 class="mb-3"><strong>Lokasi Paling Banyak Dicari</strong></h4>
+        </a>
+        <div class="row">
+          <VueSlickCarousel :arrows="true" :dots="true" :slidesToShow="5" centerPadding="30px" :autoplay="true" :autoplaySpeed="3000">
+            <div class="card  shadow-sm" v-for="(loc,index) in data_home.data.locationsList">
+              <div class="card-img">
+                <img :src="loc.image.url" class="card-img-top" :alt="loc.image.alt">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-center">{{ loc.name }}</h5>
+              </div>
             </div>
           </VueSlickCarousel>
         </div>
       </div>
-
-      <div class="container search-container shadow">
+      <div class="container px-0" style="margin-top:3%;">
+        <a href="/rooms/" class="text-dark" style="text-decoration:none;">
+          <h4><strong>Rekomendasi Untukmu</strong></h4>
+        </a>
+        <p class="mb-3">Check out some of our featured units around your area</p>
         <div class="row">
-          <div class="col-md-12 col-sm-12">
-            <h3>Welcome</h3>
-            <h3 class="mb-3"><strong>Find your affordable room, promotion and so much more...</strong></h3>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Search Location</label>
-              <div class="input-group flex-nowrap">
-                <span class="input-group-text" id="addon-wrapping"><i class="bi-search"></i></span>
-                <input type="text" class="form-control" placeholder="Nama lokasi" aria-label="Username" aria-describedby="addon-wrapping" style="width:70%; margin-right:31px;" :value='search_keyword' @input='evt=>search_keyword=evt.target.value'>
-                <div class="d-grid gap-2  ml-2" style="width: 14%;">
-                  <button class="btn btn-outline-danger" type="button" :disabled="search_keyword.length > 3? false:true" @click="search">Cari</button>
+          <VueSlickCarousel :arrows="true" :dots="false" :slidesToShow="4" centerPadding="30px">
+            <div class="card shadow-sm" v-for="(loc,index) in data_home.data.recommendationList">
+              <div class="card-img">
+                <div class="card-discount" v-if="loc.discount">
+                  <div class="card-badge">
+                    {{ loc.discount }}% Off Today
+                  </div>
                 </div>
+                <img :src="loc.image.url" class="card-img-top" :alt="loc.image.alt">
               </div>
+              <div class="card-body card-body-room">
+                <h5 class="card-title">{{ loc.name }}</h5>
+                <p class="f12 text-secondary">{{ loc.address }}</p>
+                <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ loc.originalPrice }}</p>
+                <p class="display-7 text-danger"><strong>Rp. {{ loc.sellingPrice }}</strong></p>
+              </div>
+            </div>
+          </VueSlickCarousel>
+        </div>
+      </div>
+      <section class="section-community">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 text-light">
+              <h3>RoomMe Community Adapting the Current Modern lifestyle</h3>
+              <p>Our kost is more than a room, it is a new living experience</p>
+              <button type="button" class="btn btn-danger btn-lg mt-3">Explore Community</button>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="container px-0" style="margin-top:10%;">
-      <a href="/rooms/" class="text-dark" style="text-decoration:none;">
-        <h4 class="mb-3"><strong>Lokasi Paling Banyak Dicari</strong></h4>
-      </a>
-      <div class="row">
-        <VueSlickCarousel :arrows="true" :dots="true" :slidesToShow="5" centerPadding="30px" :autoplay="true" :autoplaySpeed="3000">
-          <div class="card  shadow-sm" v-for="(loc,index) in data_home.data.locationsList">
-            <div class="card-img">
-              <img :src="loc.image.url" class="card-img-top" :alt="loc.image.alt">
-            </div>
-            <div class="card-body">
-              <h5 class="card-title text-center">{{ loc.name }}</h5>
-            </div>
-          </div>
-        </VueSlickCarousel>
-      </div>
-    </div>
-    <div class="container px-0" style="margin-top:3%;">
-      <a href="/rooms/" class="text-dark" style="text-decoration:none;">
-        <h4><strong>Rekomendasi Untukmu</strong></h4>
-      </a>
-      <p class="mb-3">Check out some of our featured units around your area</p>
-      <div class="row">
-        <VueSlickCarousel :arrows="true" :dots="false" :slidesToShow="4" centerPadding="30px">
-          <div class="card shadow-sm" v-for="(loc,index) in data_home.data.recommendationList">
-            <div class="card-img">
-              <div class="card-discount" v-if="loc.discount">
-                <div class="card-badge">
-                  {{ loc.discount }}% Off Today
-                </div>
-              </div>
-              <img :src="loc.image.url" class="card-img-top" :alt="loc.image.alt">
-            </div>
-            <div class="card-body card-body-room">
-              <h5 class="card-title">{{ loc.name }}</h5>
-              <p class="f12 text-secondary">{{ loc.address }}</p>
-              <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ loc.originalPrice }}</p>
-              <p class="display-7 text-danger"><strong>Rp. {{ loc.sellingPrice }}</strong></p>
-            </div>
-          </div>
-        </VueSlickCarousel>
-      </div>
-    </div>
-    <section class="section-community">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-8 text-light">
-            <h3>RoomMe Community Adapting the Current Modern lifestyle</h3>
-            <p>Our kost is more than a room, it is a new living experience</p>
-            <button type="button" class="btn btn-danger btn-lg mt-3">Explore Community</button>
-          </div>
-        </div>
-      </div>
+      </section>
+      <section>
+        <img src="/img/landlord.png" width="100%" />
+      </section>
     </section>
-    <section>
-      <img src="/img/landlord.png" width="100%" />
+    <section v-if="is_mobile" class="mobile-wrapper pb-5">
+        <div class="position-relative">
+          <div class="row m-0">
+            <div class="col-md-12 col-sm-12 p-0">
+              <VueSlickCarousel :arrows="false" :dots="true" :autoplay="true" :autoplaySpeed="5000">
+                <div v-for="(banner,index) in data_home.data.banners">
+                  <a :href="banner.linkUrl">
+                    <img :src="banner.image.url" :alt="banner.image.alt" width="100%" />
+                  </a>
+                </div>
+              </VueSlickCarousel>
+            </div>
+          </div>
+          <div class="px-2 bg-light " style="margin-top:-20px">
+            <div class="input-group mb-3 shadow">
+              <input type="text" class="form-control form-control-lg f12" placeholder="Cari kost terbaik di sini" aria-label="Username" aria-describedby="basic-addon1" :value='search_keyword' @input='evt=>search_keyword=evt.target.value' @keyup="autocomplete()">
+              <span class="input-group-text" id="basic-addon1" @click="search"><i class="bi bi-search"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="row mx-0 px-0">
+          <h4 class="f16 mb-3">Lokasi yang banyak dicari</h4>
+          <VueSlickCarousel :arrows="false" :dots="true" :slidesToShow="2.1" centerPadding="30px" :autoplay="true" :autoplaySpeed="3000" class="slick-location">
+            <div class="card  shadow-sm" v-for="(loc,index) in data_home.data.locationsList">
+              <div class="card-img">
+                <img :src="loc.image.url" class="card-img-top" :alt="loc.image.alt">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-center ">{{ loc.name }}</h5>
+              </div>
+            </div>
+          </VueSlickCarousel>
+        </div>
+        <div class="row mx-0 px-0">
+          <h4 class="f16 mt-5 mb-3">Rekomendasi Untukmu</h4>
+          <div v-for="(loc,index) in data_home.data.recommendationList" class="col-6 mb-3" >
+            <div class="card card-m ">
+              <div class="card-img shadow">
+                <div class="card-discount" v-if="loc.discount">
+                  <div class="card-badge">
+                    {{ loc.discount }}%
+                  </div>
+                </div>
+                <div class="card-rating">
+                  <i class="bi bi-star-fill"></i> {{ loc.rating }}
+                </div>
+                <img :src="loc.image.url" class="card-img-top shadow" :alt="loc.image.alt">
+              </div>
+              <div class="card-body card-body-room">
+                <h5 class="card-title">{{ loc.name }}</h5>
+                <p class="f12 text-secondary">{{ loc.address }}</p>
+                <p class="f10 text-muted mb-1 text-decoration-line-through" v-show="loc.originalPrice != loc.sellingPrice">Start from Rp.{{ loc.originalPrice }}</p>
+                <p class="display-7 text-danger"><strong>Rp. {{ loc.sellingPrice }}</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
     </section>
   </section>
 </template>
@@ -134,12 +194,47 @@ export default {
   },
   data(){
     return{
-      search_keyword:''
+      search_keyword:'',
+      search_data:''
     }
+  },
+  computed:{
+    is_mobile(){
+      return this.$store.state.is_mobile;
+    },
   },
   methods: {
     search:function() {
-      location.href="/rooms/"
+      location.href="/rooms/?keyword="+this.search_keyword
+    },
+    autocomplete:function(){
+      var vm = this;
+
+      try{
+        axios({
+          method: 'GET',
+          url: global.base_url+'search/autocomplete?keyword='+vm.search_keyword,
+          headers:{
+            'Content-Type':'application/json',
+            //'Access-Control-Allow-Origin': false
+          },
+        })
+        .then((response)=> {
+          vm.search_data = response.data
+          console.log(vm.search_data)
+        })
+        .catch((error) => {
+          vm.error = true;
+          vm.error_msg = error.message;
+
+          setTimeout(()=>{
+            vm.error = false;
+            vm.error_msg = '';
+          }, 5000)
+        });
+      }catch(err){
+        alert(err);
+      }
     }
   },
   mounted(){
@@ -155,6 +250,18 @@ export default {
   background-size: cover;
   padding:10% 0;
   margin:30px 0 0;
+}
+
+.input-group-text{
+  background: white;
+
+  border-width: 1px;
+  border-right: none;
+  color: rgb(199, 199, 199);
+}
+
+.input-group input{
+  border-left: none;
 }
 
 .title {
@@ -252,5 +359,117 @@ export default {
   .search-container{
     left: 12%;
   }
+}
+
+@media only screen and (max-width: 768px) {
+  .card-img {
+    height: 20vh;
+  }
+
+  .card-body-room {
+    height: 60px;
+  }
+
+  .card-title{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  .slick-location{
+    width: 100%;
+  }
+
+  .slick-location .slick-list{
+    padding:0px 5px 10px;
+  }
+
+  .slick-location .slick-dots{
+    text-align: left;
+    right: 0;
+    padding-left: 10px;
+    bottom: -15px;
+  }
+
+  .slick-location .slick-dots li button{
+    background-color: rgb(205, 51, 34);
+  }
+
+  .card-m{
+    width: 100% !important;
+    border:none;
+  }
+
+  .card-badge {
+    width: 50px;
+    height: 30px;
+    position: relative;
+    background: rgb(250, 200, 0);
+    color: black;
+    padding:4px 10px;
+    font-size: 14px;
+  }
+  .card-badge:before {
+    content: "";
+    position: absolute;
+    right: -15px;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 15px solid rgb(250, 200, 0);
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+  }
+  .card-discount {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }
+
+  .card-m .card-title{
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+  .card-rating{
+    background: white;
+    position: absolute;
+    bottom: 0;
+    padding:3px 10px;
+    font-size: 12px;
+    border-radius: 0 4px 0 0;
+  }
+
+  .card-rating .bi{
+    color: rgb(250, 200, 0);
+  }
+
+  .card-m .card-body-room{
+    height: auto;
+    padding:15px 0 0;
+  }
+
+  .card-m .bard-body{
+    border:none
+  }
+
+  .input-group-text{
+  background: white;
+
+  border-width: 1px;
+  border-left: none;
+  color: rgb(199, 199, 199);
+}
+
+.input-group input{
+  border-right: none;
+}
+
+
+}
+
+.mobile-wrapper{
+  padding:38px 0 0;
 }
 </style>

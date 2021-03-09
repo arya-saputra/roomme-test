@@ -1,6 +1,7 @@
 export const state = () => ({
   loading:false,
-  token:''
+  token:'',
+  is_mobile:false
 });
 
 export const mutations = {
@@ -15,5 +16,8 @@ export const mutations = {
   },
   clearToken(state) {
     state.token = '';
+  },
+  setMobile(state, mobile) {
+    state.is_mobile = mobile;
   }
 }
